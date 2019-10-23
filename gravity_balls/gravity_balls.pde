@@ -30,13 +30,14 @@ class Ball {
         vel.add(gravity);
       }
     }
-    pos.add(vel);
+    pos.add(vel.div(fraction));
   }
 }
 
-int count = 10;
+int count = 30;
 Ball[] balls = new Ball[count];
 float maxSpeed = 5;
+float fraction = 1.1;
 
 void setup() {
   size(1000, 1000, P2D);
