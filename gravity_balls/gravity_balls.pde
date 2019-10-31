@@ -39,14 +39,17 @@ class Ball {
   }
 }
 
-int count = 10;
+int count = 100;
 Ball[] balls = new Ball[count];
 float maxSpeed = 5;
 // drag force
 float Cd = 0.01;
 
+// gravity
+float Cg = 0.1;
+
 void setup() {
-  size(600, 600, P2D);
+  size(1200, 1200, P2D);
   //fullScreen(P2D);
   background(0);
   for (int i = 0; i < count; i++) {
@@ -58,6 +61,7 @@ void draw() {
   fill(0, 0, 0, 20);
   strokeWeight(0);
   rect(0, 0, width, height);
+  //background(0);
   
   fill(255);
   
@@ -65,9 +69,12 @@ void draw() {
     for (Ball b: balls) {
       float d = dist(a.pos.x, a.pos.y, b.pos.x, b.pos.y);
       
-      if (d < 200 && d > 1) {
-        PVector gravity = b.pos.copy().sub(a.pos).normalize().div(d * d * 10).mult(b.size);
+      if (d < 400 && d > a.size + b.size) {
+        PVector gravity = b.pos.copy().sub(a.pos).normalize().mult(Cg * b.volume * a.volume).div(d * d);
         a.applyForce(gravity);
+      } else if (d < a.size + b.size && d > 1) {
+        PVector agr = b.pos.copy().sub(a.pos).normalize().mult(-1 * b.size * a.size).div(d * d);
+        a.applyForce(agr);
       }
     }
     PVector drag = a.vel.get();
