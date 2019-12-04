@@ -54,11 +54,11 @@ class Particle {
   }
 }
 
-Particle[] preys = new Particle[90];
+Particle[] preys = new Particle[150];
 Particle[] predators = new Particle[3];
 float maxSpeed = 5;
 // drag force
-float Cd = 0.001;
+float Cd = 0.01;
 
 // gravity
 float Cg =  0.0000001;
@@ -69,11 +69,11 @@ void setup() {
   //fullScreen(P2D);
   background(0);
   for (int i = 0; i < 3; i++) {
-    predators[i] = new Particle(5, 80, -1);
+    predators[i] = new Particle(5, 60, -1);
   }
   
-  for (int i = 0; i < 90; i++) {
-    preys[i] = new Particle(2, 20, 1);
+  for (int i = 0; i < 150; i++) {
+    preys[i] = new Particle(2, 10, 1);
   }
 }
 
@@ -89,12 +89,12 @@ void draw() {
     for (Particle prey: preys) {
       float d = dist(predator.pos.x, predator.pos.y, prey.pos.x, prey.pos.y);
       
-      if (d > predator.size + prey.size) {
+      if (d > predator.size) {
         PVector dir = prey.pos.copy().sub(predator.pos).normalize();
-        PVector gravity = dir.mult(40).div(d * d);
+        PVector gravity = dir.copy().mult(40).div(d * d);
         predator.applyForce(gravity);
         
-        PVector agravity = dir.mult(-100).div(d * d);
+        PVector agravity = dir.mult(6000).div(d * d);
         prey.applyForce(agravity);
       }
     }
@@ -109,8 +109,11 @@ void draw() {
   for  (Particle prey1: preys) {
     for (Particle prey2: preys) {
       float d = dist(prey1.pos.x, prey1.pos.y, prey2.pos.x, prey2.pos.y);
+      PVector dir = prey2.pos.copy().sub(prey1.pos).normalize();
       if (d > prey1.size + prey2.size) {
-        PVector dir = prey2.pos.copy().sub(prey1.pos).normalize();
+        PVector gr = dir.mult(20).div(d * d);
+        prey1.applyForce(gr);
+      } else if (d > 1) {
         PVector gr = dir.mult(20).div(d * d);
         prey1.applyForce(gr);
       }
