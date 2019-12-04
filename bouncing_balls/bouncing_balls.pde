@@ -7,6 +7,8 @@ class Ball {
   float xSpeed;
   float ySpeed;
   
+  int charge;
+  
   Ball() {
     x = random(width);
     y = random(height);
@@ -14,6 +16,8 @@ class Ball {
     h = 20;
     xSpeed = random(2, 8);
     ySpeed = random(2, 8);
+    
+    charge = (int) random(-1, 1);
   }
   
   void draw() {

@@ -1,3 +1,9 @@
+/*
+TODO:
+  single attractor
+  positive and negative balls
+*/
+
 class Ball {
   PVector pos;
   PVector vel;
@@ -5,15 +11,18 @@ class Ball {
   float size;
   float volume;
   
+  int charge;
   
   Ball(int speed) {
     pos = new PVector(random(width), random(height));
     vel = new PVector(random(-speed, speed), random(-speed, speed));
     acc = new PVector(0, 0);
-    size = random(60);
+    size = random(1, 50);
     
     float r = (size / 2);
     volume = (4 / 3) * PI * r * r * r;
+    
+    charge = (int) random(-1, 1);
   }
   
   void draw() {
@@ -43,13 +52,14 @@ int count = 100;
 Ball[] balls = new Ball[count];
 float maxSpeed = 5;
 // drag force
-float Cd = 0.01;
+float Cd = 0.001;
 
 // gravity
-float Cg = 0.1;
+float Cg =  0.0000001;
+float Cag = 0.000001;
 
 void setup() {
-  size(1200, 1200, P2D);
+  size(1000, 1000, P2D);
   //fullScreen(P2D);
   background(0);
   for (int i = 0; i < count; i++) {
@@ -73,7 +83,7 @@ void draw() {
         PVector gravity = b.pos.copy().sub(a.pos).normalize().mult(Cg * b.volume * a.volume).div(d * d);
         a.applyForce(gravity);
       } else if (d < a.size + b.size && d > 1) {
-        PVector agr = b.pos.copy().sub(a.pos).normalize().mult(-1 * b.size * a.size).div(d * d);
+        PVector agr = b.pos.copy().sub(a.pos).normalize().mult(-1 * Cag * b.volume * a.volume).div(d * d);
         a.applyForce(agr);
       }
     }
